@@ -1,9 +1,9 @@
 import os
 from datetime import datetime, timedelta, timezone
-from jose import jwt
+from jose import jwt, JWTError
 
 
-class SecurityService:
+class JwtService:
     SECRET_KEY = os.getenv("SECRET_KEY")
     ALGORITHM = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES = 60
@@ -19,3 +19,13 @@ class SecurityService:
 
         to_encode.update({"exp": expire})
         return jwt.encode(to_encode, cls.SECRET_KEY, algorithm=cls.ALGORITHM)
+
+    @classmethod
+    def decode_access_token(cls, token: str) -> dict | None:
+        if not cls.SECRET_KEY:
+            raise ValueError("MUST PROVIDE SECRET_KEY")
+        try:
+            payload = jwt.decode(token, cls.SECRET_KEY, algorithms=[cls.ALGORITHM])
+            return payload
+        except JWTError:
+            return None

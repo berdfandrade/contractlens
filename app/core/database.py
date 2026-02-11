@@ -21,6 +21,10 @@ def get_database():
     return client[settings.db_name]
 
 
+def resolve_db(db=None):
+    return db if db is not None else get_database()
+
+
 def set_database(db):
     global _database
     _database = db
