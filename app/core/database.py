@@ -19,3 +19,8 @@ def get_database():
     if client is None:
         raise RuntimeError("Mongo client is not initialized")
     return client[settings.db_name]
+
+
+def set_database(db):
+    global _database
+    _database = db
