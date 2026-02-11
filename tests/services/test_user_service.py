@@ -1,6 +1,5 @@
 import pytest
 
-from app.core.database import connect_to_mongo, get_database
 from app.services.user import UserService
 from app.services.hash import HashService
 from app.models.user import UserCreate
