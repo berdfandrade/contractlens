@@ -2,7 +2,7 @@ from app.services.jwt import JwtService
 from app.services.user import UserService
 from app.services.hash import HashService
 from pydantic import EmailStr
-from app.services.errors.auth import EmailNotRegistered, InvalidCredentialsError
+from app.services.errors.auth import EmailNotRegistered
 
 
 class AuthService:
