@@ -40,7 +40,7 @@ class JwtService:
         if not cls.SECRET_KEY:
             raise ValueError("MUST PROVIDE SECRET_KEY")
 
-        secret: str = cls.SECRET_KEY  # narrowing explícito
+        secret: str = cls.SECRET_KEY
         try:
             payload = jwt.decode(token, cls.SECRET_KEY, algorithms=[cls.ALGORITHM])
             return payload

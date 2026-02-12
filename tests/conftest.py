@@ -1,6 +1,7 @@
 import pytest
 from testcontainers.mongodb import MongoDbContainer
 from motor.motor_asyncio import AsyncIOMotorClient
+from app.services.jwt import JwtService
 
 from app.core.database import set_database
 
@@ -9,6 +10,11 @@ from app.core.database import set_database
 def mongo_container():
     with MongoDbContainer("mongo:7") as mongo:
         yield mongo
+
+
+@pytest.fixture(autouse=True)
+def setup_jwt():
+    JwtService.SECRET_KEY = "test-secret"
 
 
 @pytest.fixture
