@@ -1,17 +1,16 @@
 from fastapi import FastAPI
-from app.api.routes import router
-from app.api.auth import router as auth_router
-from app.api.routes import router as hello_router
-
-app = FastAPI(
-    title="My FastAPI App",
-    description="My FastAPI App",
-)
-
-app.include_router(auth_router)
-app.include_router(hello_router)
+from contextlib import asynccontextmanager
+from app.core.database import connect_to_mongo, close_mongo_connection
+from app.api import router
 
 
-@app.get("/")
-async def root():
-    return {"message": "ContractLens API is alive"}
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await connect_to_mongo()
+    yield
+    await close_mongo_connection()
+
+
+app = FastAPI(title="My FastAPI App", description="My FastAPI App", lifespan=lifespan)
+
+app.include_router(router)

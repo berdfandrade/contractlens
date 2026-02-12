@@ -32,3 +32,6 @@ class AuthService:
 
     def login_user(self, user):
         return self.jwt_service.create_access_token({"sub": user["id"]})
+
+    async def register_user(self, data):
+        return await self.user_service.create_user(data)
