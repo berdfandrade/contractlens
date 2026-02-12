@@ -7,6 +7,7 @@ BASE_DIR = Path(__file__).parent.parent
 class Settings(BaseSettings):
     mongo_url: str = "mongodb://localhost:27017"
     db_name: str = "contractlens"
+    reset_token_secret: str = "fallback_secret"
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
 
