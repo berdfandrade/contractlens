@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
+
+    <div class="bg-white shadow-xl rounded-2xl flex flex-col md:flex-row max-w-4xl w-full overflow-hidden">
+        
+        <!-- Lado esquerdo -->
+        <div class="hidden md:block md:w-1/2 bg-blue-600 text-white flex items-center justify-center">
+            <div class="p-8">
+                <h2 class="text-4xl font-bold mb-4">Contract Lens</h2>
+                <p class="text-blue-200">
+                    Crie sua conta para analisar e gerenciar contratos com segurança e praticidade.
+                </p>
+            </div>
+        </div>
+
+        <!-- Lado direito -->
+        <div class="w-full md:w-1/2 p-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">
+                Criar conta
+            </h2>
+
+            <form action="/register" method="post" class="space-y-4">
+                
+                <div>
+                    <label for="name" class="block text-gray-700 font-medium mb-1">
+                        Nome
+                    </label>
+                    <input 
+                        type="text"
+                        name="name"
+                        id="name"
+                        placeholder="Seu nome"
+                        required
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+
+                <div>
+                    <label for="email" class="block text-gray-700 font-medium mb-1">
+                        Email
+                    </label>
+                    <input 
+                        type="email"
+                        name="email"
+                        id="email"
+                        placeholder="seu@email.com"
+                        required
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+
+                <div>
+                    <label for="password" class="block text-gray-700 font-medium mb-1">
+                        Senha
+                    </label>
+                    <input 
+                        type="password"
+                        name="password"
+                        id="password"
+                        placeholder="••••••••"
+                        required
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+
+                <div>
+                    <label for="confirm_password" class="block text-gray-700 font-medium mb-1">
+                        Confirmar senha
+                    </label>
+                    <input 
+                        type="password"
+                        name="confirm_password"
+                        id="confirm_password"
+                        placeholder="••••••••"
+                        required
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+
+                <button
+                    type="submit"
+                    class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition">
+                    Criar conta
+                </button>
+            </form>
+
+            <div class="mt-4 text-center text-gray-600">
+                Já possui uma conta?
+                <a href="/login" class="text-blue-600 hover:underline">
+                    Fazer login
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

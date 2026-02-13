@@ -27,11 +27,11 @@ class UserService:
         reset_link = f"https://contractlens.com/reset-password?token={token}"
 
         # Criar um mail service
-        await send_email(
-            to=user.email,
-            subject="Redefinição de senha Contract Lens",
-            body=f"Clique aqui para redefinir sua senha: {reset_link}",
-        )
+        # await send_email(
+        #     to=user.email,
+        #     subject="Redefinição de senha Contract Lens",
+        #     body=f"Clique aqui para redefinir sua senha: {reset_link}",
+        # )
 
     async def create_user(self, user: UserCreate):
         existing_user = await self.db.users.find_one({"email": user.email})

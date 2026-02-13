@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from app.api import router
 from app.core.database import connect_to_mongo, close_mongo_connection
 from contextlib import asynccontextmanager
-from fastapi.responses import HTMLResponse
+
 from app.core.mounts import mount_static
 from app.templates.config import templates
 
@@ -20,11 +20,4 @@ app = FastAPI(
 
 mount_static(app)
 
-# app.include_router(router)
-
-
-@app.get("/", response_class=HTMLResponse)
-async def read_root(request: Request):
-    return templates.TemplateResponse(
-        "index.html", {"request": request, "title": "Home"}
-    )
+app.include_router(router)
