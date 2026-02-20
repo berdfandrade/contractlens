@@ -35,19 +35,17 @@ def token_service():
 
 
 def test_create_reset_token_success(token_service):
-    token = token_service.create_reset_token("user123", expires_minutes=1)
+    token = token_service.create_reset_token("user123")
     assert token is not None
     user_id = token_service.verify_reset_token(token)
     assert user_id == "user123"
 
 
 def test_verify_reset_token_expired(token_service):
-    # cria token com expiração curtíssima
-    token = token_service.create_reset_token("user123", expires_minutes=0.01)
+    token = token_service.create_reset_token("user123", expires_seconds=1)
     assert token is not None
 
-    # espera expirar
-    sleep(1)
+    sleep(2)
 
     user_id = token_service.verify_reset_token(token)
     assert user_id is None

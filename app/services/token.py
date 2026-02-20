@@ -1,7 +1,7 @@
 from jose import jwt, ExpiredSignatureError, JWTError
 from app.services.errors.auth import InvalidRefreshToken
 from app.core.config import settings
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 
 class TokenService:
@@ -10,11 +10,10 @@ class TokenService:
     ):
         self.jwt_service = jwt_service
         self.refresh_repo = refresh_repo
-        self.secret_key = settings.reset_token_secret
+        self.secret_key = secret_key
 
     async def create_session(self, user_id: str):
         access_token = self.jwt_service.create_access_token({"sub": user_id})
-
         refresh_token = self.jwt_service.create_refresh_token({"sub": user_id})
 
         await self.refresh_repo.save_token(
@@ -52,10 +51,10 @@ class TokenService:
     async def revoke_session(self, refresh_token: str):
         await self.refresh_repo.delete_token(refresh_token)
 
-    def create_reset_token(self, user_id: str, expires_minutes: int = 30) -> str:
+    def create_reset_token(self, user_id: str, expires_seconds: int = 1800) -> str:
         payload = {
             "sub": user_id,
-            "exp": datetime.utcnow() + timedelta(minutes=expires_minutes),
+            "exp": datetime.now(timezone.utc) + timedelta(seconds=expires_seconds),
         }
         return jwt.encode(payload, self.secret_key, algorithm="HS256")
 

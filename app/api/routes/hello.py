@@ -33,6 +33,6 @@ async def create_account(request: Request):
     )
 
 
-@router.get("/")
+@router.get("/check-health")
 async def root():
     return {"message": "ContractLens API is alive"}
