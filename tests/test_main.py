@@ -5,6 +5,6 @@ client = TestClient(app)
 
 
 def test_hello():
-    response = client.get("/check-health")
+    response = client.get("api/check-health")
     assert response.status_code == 200
     assert response.json()["message"] == "ContractLens API is alive"

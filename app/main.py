@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request
-from app.api import router
+from app.api import api_router
 from app.core.database import connect_to_mongo, close_mongo_connection
 from contextlib import asynccontextmanager
 
@@ -20,4 +20,4 @@ app = FastAPI(
 
 mount_static(app)
 
-app.include_router(router)
+app.include_router(api_router)

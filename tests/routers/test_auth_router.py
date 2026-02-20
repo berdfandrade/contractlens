@@ -34,7 +34,7 @@ async def test_login_success(test_db):
     ) as client:
 
         response = await client.post(
-            "/auth/login",
+            "api/auth/login",
             json={
                 "email": "bernardo@test.com",
                 "password": "123456",
@@ -59,7 +59,7 @@ async def test_register_success(test_db):
     ) as client:
 
         response = await client.post(
-            "/auth/register",
+            "api/auth/register",
             json={
                 "name": "Bernardo",
                 "email": "bernardo@test.com",
@@ -104,7 +104,7 @@ async def test_register_user_already_exists(test_db):
     ) as client:
 
         response = await client.post(
-            "/auth/register",
+            "api/auth/register",
             json={
                 "name": "Bernardo",
                 "email": "bernardo@test.com",

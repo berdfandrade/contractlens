@@ -5,24 +5,10 @@ from app.templates.config import templates
 router = APIRouter()
 
 
-@router.get("/screen", response_class=HTMLResponse)
-async def read_root(request: Request):
-    return templates.TemplateResponse(
-        "index.html", {"request": request, "title": "Home"}
-    )
-
-
 @router.get("/login")
 async def hello(request: Request):
     return templates.TemplateResponse(
         "index.html", {"request": request, "title": "Home"}
-    )
-
-
-@router.get("/forgot-password")
-async def forgot_password(request: Request):
-    return templates.TemplateResponse(
-        "forgot-password.html", {"request": request, "title": "Forgot password"}
     )
 
 
@@ -33,6 +19,8 @@ async def create_account(request: Request):
     )
 
 
-@router.get("/check-health")
-async def root():
-    return {"message": "ContractLens API is alive"}
+@router.get("/forgot-password")
+async def forgot_password(request: Request):
+    return templates.TemplateResponse(
+        "forgot-password.html", {"request": request, "title": "Forgot password"}
+    )
