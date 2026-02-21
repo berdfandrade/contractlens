@@ -67,7 +67,7 @@ class PasswordResetService:
         if not reset_doc:
             raise ValueError("Invalid or expired token")
 
-        if reset_doc["expires_at"] < datetime.utcnow():
+        if reset_doc["expires_at"] < datetime.now():
             raise ValueError("Token expired")
 
         user_id = reset_doc["user_id"]
