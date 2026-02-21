@@ -1,9 +1,9 @@
 from fastapi import APIRouter
 
-from .routes.auth import router as auth_router
-from .routes.health import router as health_router
+from .routes.auth import router as api_auth_router
+from .routes.health import router as api_health_router
 
-api_router = APIRouter(prefix="/api", tags=["api"])
+api_router = APIRouter(prefix="/api")
 
-api_router.include_router(auth_router)
-api_router.include_router(health_router)
+api_router.include_router(api_auth_router)
+api_router.include_router(api_health_router)

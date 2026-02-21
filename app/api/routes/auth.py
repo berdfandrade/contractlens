@@ -13,7 +13,7 @@ from app.api.exceptions.auth import (
 from app.services.errors.user import UserAlreadyExistsError, ErrorOnCreatingUser
 
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(prefix="/auth", tags=["🔒 Auth"])
 
 
 @router.post("/login")

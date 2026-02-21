@@ -24,3 +24,14 @@ async def forgot_password(request: Request):
     return templates.TemplateResponse(
         "forgot-password.html", {"request": request, "title": "Forgot password"}
     )
+
+
+@router.get("/reset-password")
+async def reset_password_page(request: Request, token: str):
+    return templates.TemplateResponse(
+        "reset-password.html",
+        {
+            "request": request,
+            "token": token,
+        },
+    )
