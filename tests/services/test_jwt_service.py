@@ -45,6 +45,17 @@ def test_create_refresh_token_success():
     assert decoded["sub"] == "123"
     assert decoded["type"] == "refresh"
     assert "exp" in decoded
+    assert "jti" in decoded
+    assert isinstance(decoded["jti"], str)
+
+
+def test_refresh_token_is_unique():
+    data = {"sub": "123", "type": "refresh"}
+
+    token1 = JwtService.create_refresh_token(data)
+    token2 = JwtService.create_refresh_token(data)
+
+    assert token1 != token2
 
 
 def test_decode_token_success():

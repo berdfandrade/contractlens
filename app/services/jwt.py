@@ -1,4 +1,5 @@
 import os
+import uuid
 from datetime import datetime, timedelta, timezone
 from jose import jwt, JWTError
 
@@ -30,10 +31,14 @@ class JwtService:
 
     @classmethod
     def create_refresh_token(cls, data: dict):
-        return cls._create_token(
-            data,
-            timedelta(days=cls.REFRESH_TOKEN_EXPIRE_DAYS),
-        )
+        if not cls.SECRET_KEY:
+            raise ValueError("Secret key not set")
+
+        payload = data.copy()
+        payload["exp"] = datetime.now(timezone.utc) + timedelta(days=7)
+        payload["jti"] = str(uuid.uuid4())
+
+        return jwt.encode(payload, cls.SECRET_KEY, algorithm=cls.ALGORITHM)
 
     @classmethod
     def decode_token(cls, token: str) -> dict:

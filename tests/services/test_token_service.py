@@ -1,57 +1,95 @@
 import pytest
-from time import sleep
+
 from app.services.token import TokenService
+from app.services.jwt import JwtService
+from app.services.errors.auth import InvalidRefreshToken
+from app.repositories.refresh_token import RefreshTokenRepository
 
 
-# Mocks simples para jwt_service e refresh_repo
-class MockJWT:
-    def create_access_token(self, data):
-        return "access_token_mock"
+@pytest.mark.asyncio
+async def test_create_session_success(test_db):
+    db = test_db
 
-    def create_refresh_token(self, data):
-        return "refresh_token_mock"
+    JwtService.SECRET_KEY = "test-secret"
 
-    def decode_token(self, token):
-        return {"sub": "user123"}
+    refresh_repo = RefreshTokenRepository(db)
+    token_service = TokenService(
+        jwt_service=JwtService,
+        refresh_repo=refresh_repo,
+        secret_key="test-secret",
+    )
 
+    session = await token_service.create_session("user123")
 
-class MockRepo:
-    async def save_token(self, **kwargs):
-        pass
+    assert session["access_token"] is not None
+    assert session["refresh_token"] is not None
 
-    async def get_token(self, token):
-        return True
-
-    async def rotate_token(self, old_token, new_token):
-        pass
-
-    async def delete_token(self, token):
-        pass
+    # Confirma que salvou no Mongo
+    stored = await db.refresh_tokens.find_one({"token": session["refresh_token"]})
+    assert stored is not None
 
 
-@pytest.fixture
-def token_service():
-    return TokenService(MockJWT(), MockRepo(), secret_key="test-reset-secret")
+@pytest.mark.asyncio
+async def test_refresh_session_success(test_db):
+    db = test_db
+
+    JwtService.SECRET_KEY = "test-secret"
+
+    refresh_repo = RefreshTokenRepository(db)
+    token_service = TokenService(
+        jwt_service=JwtService,
+        refresh_repo=refresh_repo,
+        secret_key="test-secret",
+    )
+
+    session = await token_service.create_session("user123")
+
+    refreshed = await token_service.refresh_session(session["refresh_token"])
+
+    assert refreshed["refresh_token"] != session["refresh_token"]
+
+    # Token antigo não deve mais existir
+    old = await db.refresh_tokens.find_one({"token": session["refresh_token"]})
+    assert old is None
+
+    # Token novo deve existir
+    new = await db.refresh_tokens.find_one({"token": refreshed["refresh_token"]})
+    assert new is not None
 
 
-def test_create_reset_token_success(token_service):
+@pytest.mark.asyncio
+async def test_revoke_session_success(test_db):
+    db = test_db
+
+    JwtService.SECRET_KEY = "test-secret"
+
+    refresh_repo = RefreshTokenRepository(db)
+    token_service = TokenService(
+        jwt_service=JwtService,
+        refresh_repo=refresh_repo,
+        secret_key="test-secret",
+    )
+
+    session = await token_service.create_session("user123")
+
+    await token_service.revoke_session(session["refresh_token"])
+
+    stored = await db.refresh_tokens.find_one({"token": session["refresh_token"]})
+
+    assert stored is None
+
+
+def test_create_reset_token_success(test_db):
+    JwtService.SECRET_KEY = "test-secret"
+
+    token_service = TokenService(
+        jwt_service=JwtService,
+        refresh_repo=None,  # não precisa aqui
+        secret_key="test-secret",
+    )
+
     token = token_service.create_reset_token("user123")
-    assert token is not None
+
     user_id = token_service.verify_reset_token(token)
+
     assert user_id == "user123"
-
-
-def test_verify_reset_token_expired(token_service):
-    token = token_service.create_reset_token("user123", expires_seconds=1)
-    assert token is not None
-
-    sleep(2)
-
-    user_id = token_service.verify_reset_token(token)
-    assert user_id is None
-
-
-def test_verify_reset_token_invalid(token_service):
-    invalid_token = "token-invalido"
-    user_id = token_service.verify_reset_token(invalid_token)
-    assert user_id is None

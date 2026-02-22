@@ -11,9 +11,11 @@ class PasswordResetService:
         self.hash_service = hash_service
         self.mail_service = mail_service
 
+    @staticmethod
     def _generate_token(self) -> str:
         return secrets.token_urlsafe(48)
 
+    @staticmethod
     def _hash_token(self, token: str) -> str:
         return hashlib.sha256(token.encode()).hexdigest()
 
@@ -28,7 +30,6 @@ class PasswordResetService:
 
         expires_at = datetime.now() + timedelta(minutes=30)
 
-        # Remove tokens antigos do usuário
         await self.db.password_reset_tokens.delete_many({"user_id": str(user["_id"])})
 
         await self.db.password_reset_tokens.insert_one(
