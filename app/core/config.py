@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     db_name: str = "contractlens"
     reset_token_secret: str = "fallback_secret"
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    domain: str = "http://localhost:8000"
 
 
 class TemplateSettings:

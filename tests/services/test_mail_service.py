@@ -4,7 +4,7 @@ from app.services.mail import MailService
 
 
 @pytest.mark.asyncio
-async def test_send_email_calls_smtp_methods():
+async def test_send_email_with_html_adds_alternative():
 
     mail_service = MailService(
         host="localhost",
@@ -22,10 +22,18 @@ async def test_send_email_calls_smtp_methods():
         await mail_service.send_email(
             to="user@email.com",
             subject="Test Subject",
-            body="Test Body",
+            text="Plain text",
+            html="<h1>HTML</h1>",
         )
 
-        mock_instance.connect.assert_called_once()
-        mock_instance.login.assert_called_once_with("test@test.com", "123456")
-        mock_instance.send_message.assert_called_once()
-        mock_instance.quit.assert_called_once()
+        sent_message = mock_instance.send_message.call_args[0][0]
+
+        assert sent_message["Subject"] == "Test Subject"
+        assert sent_message["To"] == "user@email.com"
+
+        assert sent_message.is_multipart()
+
+        parts = sent_message.get_payload()
+
+        assert parts[0].get_content_type() == "text/plain"
+        assert parts[1].get_content_type() == "text/html"

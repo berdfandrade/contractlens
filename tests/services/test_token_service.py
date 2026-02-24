@@ -24,7 +24,6 @@ async def test_create_session_success(test_db):
     assert session["access_token"] is not None
     assert session["refresh_token"] is not None
 
-    # Confirma que salvou no Mongo
     stored = await db.refresh_tokens.find_one({"token": session["refresh_token"]})
     assert stored is not None
 
@@ -48,11 +47,9 @@ async def test_refresh_session_success(test_db):
 
     assert refreshed["refresh_token"] != session["refresh_token"]
 
-    # Token antigo não deve mais existir
     old = await db.refresh_tokens.find_one({"token": session["refresh_token"]})
     assert old is None
 
-    # Token novo deve existir
     new = await db.refresh_tokens.find_one({"token": refreshed["refresh_token"]})
     assert new is not None
 
@@ -84,7 +81,7 @@ def test_create_reset_token_success(test_db):
 
     token_service = TokenService(
         jwt_service=JwtService,
-        refresh_repo=None,  # não precisa aqui
+        refresh_repo=None,
         secret_key="test-secret",
     )
 

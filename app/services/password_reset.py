@@ -2,6 +2,7 @@ import secrets
 import hashlib
 from datetime import datetime, timedelta
 from bson import ObjectId
+from app.core.config import settings
 
 
 class PasswordResetService:
@@ -11,13 +12,14 @@ class PasswordResetService:
         self.hash_service = hash_service
         self.mail_service = mail_service
 
-    @staticmethod
     def _generate_token(self) -> str:
         return secrets.token_urlsafe(48)
 
-    @staticmethod
     def _hash_token(self, token: str) -> str:
         return hashlib.sha256(token.encode()).hexdigest()
+
+    def _return_reset_link(self, raw_token: str) -> str:
+        return f"{settings.domain}/reset-password?token={raw_token}"
 
     async def request_password_reset(self, email: str):
 
@@ -41,7 +43,10 @@ class PasswordResetService:
             }
         )
 
-        reset_link = f"http://localhost:8000/reset-password?token={raw_token}"
+        reset_link = self._return_reset_link(raw_token)
+
+        if not reset_link:
+            raise ValueError("Error ao retornar reset link")
 
         await self.mail_service.send_email(
             to=user["email"],
