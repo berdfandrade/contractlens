@@ -6,6 +6,7 @@ from app.services.token import TokenService
 from app.services.jwt import JwtService
 from app.repositories.refresh_token import RefreshTokenRepository
 from app.services.errors.user import *
+from app.core.config import settings
 
 
 class UserService:
@@ -16,22 +17,6 @@ class UserService:
         self.token_service = TokenService(
             jwt_service=JwtService, refresh_repo=RefreshTokenRepository(db)
         )
-
-    async def request_password_reset(self, email: str):
-        user = await self.db.users.find_one(email == email)
-        if not user:
-            return  # não expõe se o email não existe
-
-        token = self.token_service.create_reset_token(user.id)
-
-        reset_link = f"https://contractlens.com/reset-password?token={token}"
-
-        # Criar um mail service
-        # await send_email(
-        #     to=user.email,
-        #     subject="Redefinição de senha Contract Lens",
-        #     body=f"Clique aqui para redefinir sua senha: {reset_link}",
-        # )
 
     async def create_user(self, user: UserCreate):
         existing_user = await self.db.users.find_one({"email": user.email})

@@ -13,7 +13,7 @@ class Settings(BaseSettings):
 
 
 class TemplateSettings:
-    TEMPLATE_DIR = BASE_DIR / "templates"
+    TEMPLATE_DIR = BASE_DIR / "templates/pages"
     STATIC_DIR = BASE_DIR / "static"
     STATIC_URL = "/static"
     STATIC_NAME = "static"
