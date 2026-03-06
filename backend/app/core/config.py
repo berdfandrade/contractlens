@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     reset_token_secret: str = "fallback_secret"
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
     domain: str = "http://localhost:8000"
+    jwt_secret_key: str = "fallback_secret"
+    algorithm: str = "HS256"
 
 
 class TemplateSettings:

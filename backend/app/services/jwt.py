@@ -2,11 +2,12 @@ import os
 import uuid
 from datetime import datetime, timedelta, timezone
 from jose import jwt, JWTError
+from app.core.config import settings
 
 
 class JwtService:
-    SECRET_KEY = os.getenv("SECRET_KEY")
-    ALGORITHM = "HS256"
+    SECRET_KEY = settings.jwt_secret_key
+    ALGORITHM = settings.algorithm
 
     ACCESS_TOKEN_EXPIRE_MINUTES = 60
     REFRESH_TOKEN_EXPIRE_DAYS = 7
