@@ -1,9 +1,7 @@
 import uuid
 from typing import Any, Mapping
 from datetime import datetime, timedelta, timezone
-
 from jose import jwt, JWTError
-
 from app.core.config import settings
 from app.services.errors.jwt import MustProvideSecretKeyError
 
