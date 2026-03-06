@@ -22,16 +22,16 @@ class AuthService:
         if not user:
             raise EmailNotRegistered()
 
-        if not self.hash_service.verify_password(
-            password,
-            user["password"],
-        ):
+        if not self.hash_service.verify_password(password, user["password"]):
             return None
 
         return self.user_service._serialize_user(user)
 
     def login_user(self, user):
-        return self.jwt_service.create_access_token({"sub": user["id"]})
+        return {
+            "access_token": self.jwt_service.create_access_token(user.id),
+            "refresh_token": self.jwt_service.create_refresh_token(user.id),
+        }
 
     async def register_user(self, data):
         return await self.user_service.create_user(data)

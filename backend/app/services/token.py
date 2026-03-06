@@ -13,8 +13,8 @@ class TokenService:
         self.secret_key = secret_key
 
     async def create_session(self, user_id: str):
-        access_token = self.jwt_service.create_access_token({"sub": user_id})
-        refresh_token = self.jwt_service.create_refresh_token({"sub": user_id})
+        access_token = self.jwt_service.create_access_token(user_id)
+        refresh_token = self.jwt_service.create_refresh_token(user_id)
 
         await self.refresh_repo.save_token(
             user_id=user_id,
@@ -35,8 +35,8 @@ class TokenService:
 
         user_id = payload["sub"]
 
-        new_access = self.jwt_service.create_access_token({"sub": user_id})
-        new_refresh = self.jwt_service.create_refresh_token({"sub": user_id})
+        new_access = self.jwt_service.create_access_token(user_id)
+        new_refresh = self.jwt_service.create_refresh_token(user_id)
 
         await self.refresh_repo.rotate_token(
             old_token=refresh_token,
